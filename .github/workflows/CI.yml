@@ -4,9 +4,9 @@ name: Sample-API-CI
 on:
   ## Triggers on every PR to the mentioned branch
   pull_request:
-    branches: [main]
+    branches: [Dev]
   push:
-    branches: [main]
+    branches: [Dev]
 
   release:
     types:
