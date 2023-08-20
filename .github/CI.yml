@@ -1,0 +1,39 @@
+# This is a  workflow to perform CI, code scans, publish image to Ghcr
+name: Sample-API-CI
+# Controls when the workflow will run/Publish cun
+on:
+  ## Triggers on every PR to the mentioned branch
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+  release:
+    types:
+      - released
+
+  # Manual trigger
+  workflow_dispatch:
+  
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3  
+
+      - name: 'Install dotnet'
+        uses: 'actions/setup-dotnet@v1'
+        with:
+         dotnet-Version: '6.x'
+      - name: 'Restore packages'
+        run: |
+             dotnet nuget restore Sample_dotnet6_App.csproj
+        shell: pwsh  
+      - name: 'build'
+        run: dotnet build Sample_dotnet6_App.csproj --no-restore --configuration Release
+      - name: Publish
+        run: dotnet publish Sample_dotnet6_App.csproj -c Release -o publish --no-build --no-restore
+        shell: pwsh
